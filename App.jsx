@@ -1,36 +1,20 @@
-import React from 'react';
 import {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+import SBar from './pages/SBar';
+import Main from './pages/main/Main';
 
 const App = () => {
     useEffect(() => {
         SplashScreen.hide();
     });
+
     return (
-        <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Hello world!!!</Text>
-        </View>
+        <SafeAreaView>
+            <SBar />
+            <Main />
+        </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24,
-    },
-    sectionTitle: {
-        fontSize: 24,
-        fontWeight: '600',
-    },
-    sectionDescription: {
-        marginTop: 8,
-        fontSize: 18,
-        fontWeight: '400',
-    },
-    highlight: {
-        fontWeight: '700',
-    },
-});
 
 export default App;
