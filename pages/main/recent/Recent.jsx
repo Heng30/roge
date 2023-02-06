@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View, Button} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, FlatList} from 'react-native';
-import {ListItem} from '@rneui/themed';
+import {Divider} from '@rneui/themed';
 import axios from 'axios';
 import util from '../../../src/util';
 
@@ -85,19 +85,26 @@ const Recent = () => {
 
   return (
     <SafeAreaView style={{flex: 1, height: '100%'}}>
-      <View>
-        <ListItem bottomDivider>
+      <View style={{height: 40}}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            height: '100%',
+            alignItems: 'center',
+          }}>
           <Text style={[styles.smallItem, {color: titleColor}]}>关注</Text>
           <Text style={[styles.smallItem, {color: titleColor}]}>排行</Text>
           <Text style={[styles.bigItem, {color: titleColor}]}>代币</Text>
-          <Text style={[styles.bigItem, {color: titleColor}]}>价格</Text>
+          <Text style={[styles.bigItem, {color: titleColor}]}>价格(60s)</Text>
           <Text style={[styles.bigItem, {color: titleColor}]}>
-            1d({upCnt[1]}%)
+            24h({upCnt[1]}%)
           </Text>
           <Text style={[styles.bigItem, {color: titleColor}]}>
             7d({upCnt[2]}%)
           </Text>
-        </ListItem>
+        </View>
+        <Divider />
       </View>
       <FlatList
         data={dataList}
@@ -110,35 +117,43 @@ const Recent = () => {
           setIsLoading(false);
         }}
         renderItem={({item}) => (
-          <ListItem bottomDivider>
-            <View style={styles.smallItem}>
-              <View
-                style={[
-                  {
-                    backgroundColor: item.mark ? item.color : 'lightgray',
-                  },
-                  styles.circle,
-                ]}
-                onStartShouldSetResponder={() => {
-                  toggleMark(item.index);
-                }}></View>
+          <View style={{height: 40}}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                height: '100%',
+                alignItems: 'center',
+              }}>
+              <View style={[styles.smallItem, {alignItems: 'center'}]}>
+                <View
+                  style={[
+                    {
+                      backgroundColor: item.mark ? item.color : 'lightgray',
+                    },
+                    styles.circle,
+                  ]}
+                  onStartShouldSetResponder={() => {
+                    toggleMark(item.index);
+                  }}></View>
+              </View>
+              <Text style={[styles.smallItem, {color: item.color}]}>
+                {item.index}
+              </Text>
+              <Text style={[styles.bigItem, {color: item.color}]}>
+                {item.symbol}
+              </Text>
+              <Text style={[styles.bigItem, {color: item.color}]}>
+                {item.price}
+              </Text>
+              <Text style={[styles.bigItem, {color: item.color}]}>
+                {item.precent24h}
+              </Text>
+              <Text style={[styles.bigItem, {color: item.color}]}>
+                {item.precent7d}
+              </Text>
             </View>
-            <Text style={[styles.smallItem, {color: item.color}]}>
-              {item.index}
-            </Text>
-            <Text style={[styles.bigItem, {color: item.color}]}>
-              {item.symbol}
-            </Text>
-            <Text style={[styles.bigItem, {color: item.color}]}>
-              {item.price}
-            </Text>
-            <Text style={[styles.bigItem, {color: item.color}]}>
-              {item.precent24h}
-            </Text>
-            <Text style={[styles.bigItem, {color: item.color}]}>
-              {item.precent7d}
-            </Text>
-          </ListItem>
+          </View>
         )}
       />
     </SafeAreaView>
@@ -147,10 +162,12 @@ const Recent = () => {
 
 const styles = StyleSheet.create({
   smallItem: {
-    width: '8%',
+    width: '10%',
+    textAlign: 'center',
   },
   bigItem: {
-    width: '16%',
+    width: '20%',
+    textAlign: 'center',
   },
   circle: {
     width: 20,
