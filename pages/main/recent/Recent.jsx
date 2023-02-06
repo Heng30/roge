@@ -7,98 +7,150 @@ import util from '../../../src/util';
 
 const Recent = () => {
   const [dataList, setDataList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [upCnt, setUpCnt] = useState([0, 0, 0]);
+  const [titleColor, setTitleColor] = useState('black');
 
   const fetchData = async () => {
-    const url = 'https://api.alternative.me/v1/ticker/?limit=100';
     try {
+      const url = 'https://api.alternative.me/v1/ticker/?limit=100';
       const resp = await axios.get(url);
       const rlist = resp.data;
+      console.log(rlist.length);
       if (rlist.length !== 100) return;
 
+      if (dataList.length <= 0) {
+        for (let i = 0; i < 100; i++) {
+          dataList.push({
+            index: i + 1,
+            mark: false,
+          });
+        }
+      }
+
+      let ucnt = [0, 0, 0];
       dataList.forEach((item, index) => {
         item.symbol = rlist[index].symbol;
         item.price = util.toFixedPrice(rlist[index].price_usd);
         item.precent1h = util.toPercentString(rlist[index].percent_change_1h);
         item.precent24h = util.toPercentString(rlist[index].percent_change_24h);
         item.precent7d = util.toPercentString(rlist[index].percent_change_7d);
+
+        if (Number(rlist[index].percent_change_1h) >= 0) {
+          ucnt[0]++;
+        }
+
+        if (Number(rlist[index].percent_change_24h) >= 0) {
+          item.color = 'green';
+          ucnt[1]++;
+        } else {
+          item.color = 'red';
+        }
+
+        if (Number(rlist[index].percent_change_7d) >= 0) {
+          ucnt[2]++;
+        }
       });
 
+      dataList.sort((a, b) => {
+        let n = Number(b.mark) - Number(a.mark);
+        if (n === 0) return a.index - b.index;
+        return n;
+      });
+
+      setTitleColor(ucnt[1] >= 50 ? 'green' : 'red');
+      setUpCnt(ucnt);
       setDataList([...dataList]);
     } catch (e) {
       console.log(e);
     }
   };
 
-  useEffect(() => {
-    if (dataList.length > 0) return;
-    for (let i = 0; i < 100; i++) {
-      dataList &&
-        dataList.push({
-          index: i + 1,
-          symbol: 'N/A',
-          price: 'N/A',
-          precent1h: 'N/A',
-          precent24h: 'N/A',
-          precent7d: 'N/A',
-          mark: false,
-        });
+  const toggleMark = index => {
+    for (let i = 0; i < dataList.length; i++) {
+      if (dataList[i].index !== index) continue;
+      dataList[i].mark = !dataList[i].mark;
+      setDataList([...dataList]);
     }
-    fetchData();
-  });
+    // TODO: update db
+  };
+
+  useEffect(() => {
+    setImmediate(async () => {
+      setIsLoading(true);
+      await fetchData();
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, height: '100%'}}>
       <View>
         <ListItem bottomDivider>
-          <Text style={styles.smallItem}>关注</Text>
-          <Text style={styles.smallItem}>排行</Text>
-          <Text style={styles.bigItem}>代币</Text>
-          <Text style={styles.bigItem}>价格</Text>
-          <Text style={styles.bigItem}>1h行情</Text>
-          <Text style={styles.bigItem}>24h行情</Text>
-          <Text style={styles.bigItem}>7d行情</Text>
+          <Text style={[styles.smallItem, {color: titleColor}]}>关注</Text>
+          <Text style={[styles.smallItem, {color: titleColor}]}>排行</Text>
+          <Text style={[styles.bigItem, {color: titleColor}]}>代币</Text>
+          <Text style={[styles.bigItem, {color: titleColor}]}>价格</Text>
+          <Text style={[styles.bigItem, {color: titleColor}]}>
+            1d({upCnt[1]}%)
+          </Text>
+          <Text style={[styles.bigItem, {color: titleColor}]}>
+            7d({upCnt[2]}%)
+          </Text>
         </ListItem>
       </View>
       <FlatList
         data={dataList}
         extraData={dataList}
         keyExtractor={item => item.index}
+        refreshing={isLoading}
+        onRefresh={async () => {
+          setIsLoading(true);
+          await fetchData();
+          setIsLoading(false);
+        }}
         renderItem={({item}) => (
           <ListItem bottomDivider>
             <View style={styles.smallItem}>
               <View
                 style={[
                   {
-                    backgroundColor: item.mark ? 'red' : 'lightgray',
+                    backgroundColor: item.mark ? item.color : 'lightgray',
                   },
                   styles.circle,
-                ]}></View>
+                ]}
+                onStartShouldSetResponder={() => {
+                  toggleMark(item.index);
+                }}></View>
             </View>
-            <Text style={styles.smallItem}>{item.index}</Text>
-            <Text style={styles.bigItem}>{item.symbol}</Text>
-            <Text style={styles.bigItem}>{item.price}</Text>
-            <Text style={styles.bigItem}>{item.precent1h}</Text>
-            <Text style={styles.bigItem}>{item.precent24h}</Text>
-            <Text style={styles.bigItem}>{item.precent7d}</Text>
+            <Text style={[styles.smallItem, {color: item.color}]}>
+              {item.index}
+            </Text>
+            <Text style={[styles.bigItem, {color: item.color}]}>
+              {item.symbol}
+            </Text>
+            <Text style={[styles.bigItem, {color: item.color}]}>
+              {item.price}
+            </Text>
+            <Text style={[styles.bigItem, {color: item.color}]}>
+              {item.precent24h}
+            </Text>
+            <Text style={[styles.bigItem, {color: item.color}]}>
+              {item.precent7d}
+            </Text>
           </ListItem>
         )}
       />
-
-      <Button
-        title="add"
-        onPress={() => {
-          fetchData();
-        }}></Button>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   smallItem: {
-    width: '5%',
+    width: '8%',
   },
   bigItem: {
-    width: '15%',
+    width: '16%',
   },
   circle: {
     width: 20,
