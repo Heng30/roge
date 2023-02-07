@@ -10,34 +10,6 @@ function toThousand(num) {
   return (num / 1000).toFixed(2) + 'K';
 }
 
-function asBillion(num, fixed) {
-  return Number((num / (1000 * 1000 * 1000)).toFixed(fixed));
-}
-
-function billionAsNum(num) {
-  return Number(num) * 1000 * 1000 * 1000;
-}
-
-function millionAsNum(num) {
-  return Number(num) * 1000 * 1000;
-}
-
-function asMillion(num, fixed) {
-  return Number((num / (1000 * 1000)).toFixed(fixed));
-}
-
-function asMillionOrBillion(num, fixed) {
-  if (Number(num) > 1000 * 1000 * 1000) return asBillion(num, fixed);
-
-  return asMillion(num, fixed);
-}
-
-function isAsBillion(num) {
-  if (Number(num) > 1000 * 1000 * 1000) return true;
-
-  return false;
-}
-
 function toFixedPrice(num) {
   num = Number(num);
   var flag = num > 0;
@@ -57,7 +29,17 @@ function toPercentString(num) {
   return Number(num).toFixed(2) + '%';
 }
 
+function toPassTimeString(num) {
+  num = Number(num);
+  if (num < 0) return '0s';
+  else if (num < 60) return String(num) + 's';
+  else if (num < 3600) return String(Math.floor(num / 60)) + 'm';
+  else if (num < 86400) return String(Math.floor(num / 3600)) + 'h';
+  else return String(Math.floor(num / 86400)) + 'd';
+}
+
 export default {
   toFixedPrice,
   toPercentString,
+  toPassTimeString,
 };

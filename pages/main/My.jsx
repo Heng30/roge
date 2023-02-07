@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native';
 
 const My = () => {
   return (
-    <SafeAreaView style={{backgroundColor: 'yellow', height: '100%'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
     </SafeAreaView>
   );
 };
