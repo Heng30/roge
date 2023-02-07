@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import Recent from './recent/Recent';
 import My from './My';
 
-const Main = () => {
+const Main = props => {
   const [index, setIndex] = useState(0);
   const [isBullMarket, setIsBullMarket] = useState(false);
 
@@ -13,27 +13,29 @@ const Main = () => {
     <View style={styles.mainContainer}>
       <View style={{flex: 1}}>
         <View style={{flex: 1, display: index === 0 ? 'flex' : 'none'}}>
-          <Recent setIsBullMarket={setIsBullMarket} />
+          <Recent setIsBullMarket={setIsBullMarket} appTheme={props.appTheme} />
         </View>
         <View style={{flex: 1, display: index === 1 ? 'flex' : 'none'}}>
-          <My />
+          <My appTheme={props.appTheme} setAppTheme={props.setAppTheme}  />
         </View>
       </View>
 
-      <Divider color="lightgray" />
+      <Divider color={props.appTheme.dividerColor} />
 
       <Tab
         value={index}
         onChange={e => setIndex(e)}
         disableIndicator
         containerStyle={active => ({
-          backgroundColor: 'white',
+          backgroundColor: 'transparent',
+          height: 50,
         })}
         variant="default">
         <Tab.Item
           title="行情"
           titleStyle={{
             color: index === 0 ? (isBullMarket ? 'green' : 'red') : 'gray',
+            fontSize: 12,
           }}
           icon={{
             name: 'timer-outline',
@@ -42,9 +44,10 @@ const Main = () => {
           }}
         />
         <Tab.Item
-          title="我的"
+          title="我"
           titleStyle={{
             color: index === 1 ? (isBullMarket ? 'green' : 'red') : 'gray',
+            fontSize: 12,
           }}
           icon={{
             name: 'person-outline',
@@ -59,7 +62,7 @@ const Main = () => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     height: '100%',
   },
 });

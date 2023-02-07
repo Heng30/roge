@@ -136,7 +136,7 @@ const Recent = props => {
             7d({upCnt[2]}%)
           </Text>
         </View>
-        <Divider />
+      <Divider color={props.appTheme.dividerColor} />
       </View>
       <FlatList
         data={dataList}
@@ -161,7 +161,7 @@ const Recent = props => {
                 <View
                   style={[
                     {
-                      backgroundColor: item.mark ? item.color : 'lightgray',
+                      backgroundColor: item.mark ? item.color : props.appTheme.markCircleColor,
                     },
                     styles.circle,
                   ]}

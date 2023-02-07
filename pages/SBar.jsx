@@ -1,12 +1,10 @@
 import {StatusBar} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-const SBar = () => {
-    const isDarkMode = false;
+const SBar = (props) => {
     return (
         <StatusBar
-            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-            backgroundColor={isDarkMode ? Colors.darker : Colors.lighter}
+            barStyle={props.appTheme.barStyle}
+            backgroundColor={props.appTheme.backgroundColor}
         />
     );
 };
