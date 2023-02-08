@@ -4,12 +4,13 @@ import {SafeAreaView, FlatList} from 'react-native';
 import {Divider} from '@rneui/themed';
 import axios from 'axios';
 import util from '../../../src/util';
+import Theme from '../../../src/theme';
 
 const Recent = props => {
   const [dataList, setDataList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [upCnt, setUpCnt] = useState([0, 0, 0]);
-  const [titleColor, setTitleColor] = useState('black');
+  const [titleColor, setTitleColor] = useState(Theme.constant.downColor);
   const [markSymbolList, setMarkSymbolList] = useState([]);
   const [refreshTimestand, setRefreshTimestand] = useState(new Date());
   const [passTimestand, setPassTimestand] = useState(new Date());
@@ -57,10 +58,10 @@ const Recent = props => {
         }
 
         if (Number(rlist[index].percent_change_24h) >= 0) {
-          item.color = 'green';
+          item.color = Theme.constant.upColor;
           ucnt[1]++;
         } else {
-          item.color = 'red';
+          item.color = Theme.constant.downColor;
         }
 
         if (Number(rlist[index].percent_change_7d) >= 0) {
@@ -76,7 +77,7 @@ const Recent = props => {
 
       props.setIsBullMarket(ucnt[1] >= 50);
       setRefreshTimestand(new Date());
-      setTitleColor(ucnt[1] >= 50 ? 'green' : 'red');
+      setTitleColor(ucnt[1] >= 50 ? Theme.constant.upColor : Theme.constant.downColor);
       setUpCnt(ucnt);
       setDataList([...dataList]);
     } catch (e) {
@@ -205,6 +206,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
+    opacity: 0.5,
   },
 });
 
