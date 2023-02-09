@@ -105,7 +105,7 @@ const Recent = props => {
   useEffect(() => {
     setImmediate(async () => {
       setIsLoading(true);
-      await fetchData();
+      // await fetchData();
       setIsLoading(false);
     });
   }, []);

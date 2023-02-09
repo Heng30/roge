@@ -1,69 +1,24 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
-import {useState} from 'react';
-import {Icon} from '@rneui/themed';
-import Theme from '../../../src/theme';
+import React from 'react';
+import {View, Text, Button} from 'react-native';
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import HomeScreen from './Home';
+import SettingScreen from './Setting';
 
-const My = props => {
-  return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          height: Theme.constant.headerHeight,
-          justifyContent: 'space-between',
-          marginHorizontal: 10,
-        }}>
-        <View style={styles.headerItem}>
-          <TouchableOpacity onPress={() => {}}>
-            <Icon type="ionicon" name="menu" color={props.appTheme.iconColor} />
-          </TouchableOpacity>
-        </View>
+const AppNavigator = createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
 
-        <View style={[styles.headerItem]}>
-          <TouchableOpacity
-            onPress={() => {
-              if (Theme.mode === 'light') {
-                props.setAppTheme(Theme.dark);
-                Theme.mode = 'dark';
-              } else {
-                props.setAppTheme(Theme.light);
-                Theme.mode = 'light';
-              }
-            }}>
-            <Icon
-              type="ionicon"
-              name={
-                props.appTheme.mode === 'light'
-                  ? 'sunny-outline'
-                  : 'moon-outline'
-              }
-              color={props.appTheme.iconColor}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{marginLeft: 10}} onPress={() => {}}>
-            <Icon
-              type="ionicon"
-              name="notifications-outline"
-              color={props.appTheme.iconColor}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  headerItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+  Setting: {
+    screen: SettingScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
   },
 });
-export default My;
+
+export default createAppContainer(AppNavigator);

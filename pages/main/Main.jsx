@@ -3,6 +3,7 @@ import {Icon, Divider} from '@rneui/themed';
 import React, {useState} from 'react';
 import Theme from './../../src/theme';
 import Recent from './recent/Recent';
+import News from './news/News';
 import My from './my/My';
 
 const RECENT_INDEX = 0;
@@ -10,7 +11,8 @@ const NEWS_INDEX = 1;
 const ME_INDEX = 2;
 
 const Main = props => {
-  const [index, setIndex] = useState(RECENT_INDEX);
+  // const [index, setIndex] = useState(RECENT_INDEX);
+  const [index, setIndex] = useState(ME_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
 
   return (
@@ -20,8 +22,22 @@ const Main = props => {
           style={{flex: 1, display: index === RECENT_INDEX ? 'flex' : 'none'}}>
           <Recent setIsBullMarket={setIsBullMarket} appTheme={props.appTheme} />
         </View>
+        <View
+          style={{flex: 1, display: index === NEWS_INDEX ? 'flex' : 'none'}}>
+          <News
+            screenProps={{
+              appTheme: props.appTheme,
+              setAppTheme: props.setAppTheme,
+            }}
+          />
+        </View>
         <View style={{flex: 1, display: index === ME_INDEX ? 'flex' : 'none'}}>
-          <My appTheme={props.appTheme} setAppTheme={props.setAppTheme} />
+          <My
+            screenProps={{
+              appTheme: props.appTheme,
+              setAppTheme: props.setAppTheme,
+            }}
+          />
         </View>
       </View>
 
