@@ -9,18 +9,27 @@ import My from './my/My';
 const RECENT_INDEX = 0;
 const NEWS_INDEX = 1;
 const ME_INDEX = 2;
+const DOUBLE_CLICK_INTERVAL = 400;
 
 const Main = props => {
-  // const [index, setIndex] = useState(RECENT_INDEX);
-  const [index, setIndex] = useState(ME_INDEX);
+  const [index, setIndex] = useState(RECENT_INDEX);
+  // const [index, setIndex] = useState(ME_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
+  const [btnClickTime, setBtnClickTime] = useState([null, null, null]);
+  const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
+  const [isJump2Recent, setIsJump2Recent] = useState(false);
 
   return (
     <View style={{height: '100%'}}>
       <View style={{flex: 1}}>
         <View
           style={{flex: 1, display: index === RECENT_INDEX ? 'flex' : 'none'}}>
-          <Recent setIsBullMarket={setIsBullMarket} appTheme={props.appTheme} />
+          <Recent
+            setIsBullMarket={setIsBullMarket}
+            appTheme={props.appTheme}
+            isDoubleClickRecentBtn={isDoubleClickRecentBtn}
+            isJump2Recent={isJump2Recent}
+          />
         </View>
         <View
           style={{flex: 1, display: index === NEWS_INDEX ? 'flex' : 'none'}}>
@@ -46,7 +55,18 @@ const Main = props => {
       <View style={{height: Theme.footerHeight, flexDirection: 'row'}}>
         <TouchableOpacity
           style={styles.TOContainer}
-          onPress={() => setIndex(RECENT_INDEX)}>
+          onPress={() => {
+            const date = new Date();
+            if (btnClickTime[RECENT_INDEX]) {
+              if (date - btnClickTime[RECENT_INDEX] <= DOUBLE_CLICK_INTERVAL) {
+                setIsDoubleClickRecentBtn(a => !a);
+              }
+            }
+            btnClickTime[RECENT_INDEX] = date;
+
+            if (index !== RECENT_INDEX) setIsJump2Recent(a => !a);
+            setIndex(RECENT_INDEX);
+          }}>
           <Icon
             type="ionicon"
             name="timer-outline"
