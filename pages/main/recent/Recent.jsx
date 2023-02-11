@@ -1,10 +1,14 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {SafeAreaView, FlatList} from 'react-native';
 import {Divider} from '@rneui/themed';
 import axios from 'axios';
 import util from '../../../src/util';
 import Theme from '../../../src/theme';
+import DB from '../../../src/db';
+import Toast from 'react-native-root-toast';
+
+const LIMIT_ITEM_CNT = 100;
 
 const Recent = props => {
   const flatListRef = useRef(null);
@@ -38,21 +42,21 @@ const Recent = props => {
 
   const fetchData = async () => {
     try {
-      const url = 'https://api.alternative.me/v1/ticker/?limit=100';
+      const url =
+        'https://api.alternative.me/v1/ticker/?limit=' + LIMIT_ITEM_CNT;
       const resp = await axios.get(url);
       const rlist = resp.data;
       console.log(rlist.length);
-      if (rlist.length !== 100) return;
+      if (rlist.length !== LIMIT_ITEM_CNT) return;
 
       if (dataList.length <= 0) {
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < LIMIT_ITEM_CNT; i++) {
           dataList.push({
             index: i + 1,
           });
         }
       }
 
-      console.log(markSymbolList);
       let ucnt = [0, 0, 0];
       dataList.forEach((item, index) => {
         item.index = index + 1;
@@ -96,7 +100,28 @@ const Recent = props => {
       );
       setUpCnt(ucnt);
       setDataList([...dataList]);
+
+      Toast.show('刷新成功!', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        backgroundColor: props.appTheme.toastBGColor,
+        textColor: Theme.constant.succeedColor,
+        shadow: false,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
     } catch (e) {
+      Toast.show(`刷新失败!\n原因: ${e.toString()}`, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        backgroundColor: props.appTheme.toastBGColor,
+        textColor: Theme.constant.failedColor,
+        shadow: false,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
       console.log(e);
     }
   };
@@ -107,16 +132,21 @@ const Recent = props => {
       dataList[i].mark = !dataList[i].mark;
       if (dataList[i].mark) {
         markSymbolList.push(dataList[i].symbol);
+        DB.priceMarkTable.insert(dataList[i].symbol);
       } else {
         const mindex = markSymbolList.findIndex(s => s === dataList[i].symbol);
         if (mindex >= 0) {
+          DB.priceMarkTable.delete(markSymbolList[mindex]);
           markSymbolList.splice(mindex, 1);
         }
       }
       setDataList([...dataList]);
     }
-    // TODO: update db
   };
+
+  useEffect(() => {
+    DB.priceMarkTable.load(markSymbolList);
+  }, []);
 
   useEffect(() => {
     setImmediate(async () => {
