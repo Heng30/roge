@@ -4,9 +4,6 @@ APP_DIR=android/app/build/outputs/apk/release
 APP_NANE=roge
 DATE=`date "+%Y_%m_%d"`
 
-foo:
-	echo ${DATE}
-
 install:
 	npm install
 
@@ -24,3 +21,6 @@ build:
 
 app-install:
 	adb install ${APP_DIR}/app-release.apk
+
+copy-action-file:
+	cp -rf ./actionfile/android-release-key.keystore ./android/app/ && cp -rf ./actionfile/gradle.properties ./android/
