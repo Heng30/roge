@@ -1,8 +1,7 @@
 name: GitHub Actions
 on: [push]
-
 jobs:
-  actions-run:
+  action-run:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -26,7 +25,7 @@ jobs:
 
       - run: echo "start install node..."
       - name: install node
-      - uses: actions/setup-node@v3
+        uses: actions/setup-node@v3
         with:
           node-version: 19
       - run: echo "end install node..."
