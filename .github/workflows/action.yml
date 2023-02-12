@@ -1,6 +1,5 @@
 name: GitHub Actions
 on: [push]
-
 jobs:
   action-run:
     runs-on: ubuntu-latest
@@ -14,31 +13,31 @@ jobs:
       - run: echo "The ${{ github.workspace }} is now ready to test your code on the runner."
       - run: ls ${{ github.workspace }}
 
-      - name: Set up our JDK environment
-        uses: actions/setup-java@v2
-        with:
-          java-version: "11"
-          distribution: "adopt"
-          cache: "gradle"
+      # - name: Set up our JDK environment
+      #   uses: actions/setup-java@v2
+      #   with:
+      #     java-version: "11"
+      #     distribution: "adopt"
+      #     cache: "gradle"
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+      # - name: Validate Gradle wrapper
+      #   uses: gradle/wrapper-validation-action@v1
 
-      - run: echo "start install node..."
-      - name: install node
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 19
-      - run: echo "end install node..."
+      # - run: echo "start install node..."
+      # - name: install node
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 19
+      # - run: echo "end install node..."
 
-      - run: echo "copy key store..."
-      - run: make copy-action-file
+      # - run: echo "copy key store..."
+      # - run: make copy-action-file
 
-      - run: echo "install mode_modules..."
-      - run: make install
+      # - run: echo "install mode_modules..."
+      # - run: make install
 
-      - run: echo "start build..."
-      - run: make build
-      - run: echo "end build..."
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      # - run: echo "start build..."
+      # - run: make build
+      # - run: echo "end build..."
+      # - run: echo "🍏 This job's status is ${{ job.status }}."
 
