@@ -1,7 +1,10 @@
-### 常用命令
-- 安装最新版本的react-native-cli: `npm install -i react-native-cli`
-- 启动gradle: `npx react-native start`
-- 运行程序: `npx react-native run-android`
+### 功能：
+    - 价格行情列表
+    - 黑白主题切换
+
+### 后续功能：
+    - 资讯列表
+    - 订阅信息通知列表
 
 ### 参考:
 - [环境搭建](https://reactnative.cn/docs/environment-setup)

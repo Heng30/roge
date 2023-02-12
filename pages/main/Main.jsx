@@ -33,12 +33,7 @@ const Main = props => {
         </View>
         <View
           style={{flex: 1, display: index === NEWS_INDEX ? 'flex' : 'none'}}>
-          <News
-            screenProps={{
-              appTheme: props.appTheme,
-              setAppTheme: props.setAppTheme,
-            }}
-          />
+          <News appTheme={props.appTheme} />
         </View>
         <View style={{flex: 1, display: index === ME_INDEX ? 'flex' : 'none'}}>
           <My
