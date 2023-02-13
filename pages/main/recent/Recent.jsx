@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import {SafeAreaView, FlatList} from 'react-native';
 import {Divider} from '@rneui/themed';
@@ -7,6 +13,7 @@ import util from '../../../src/util';
 import Theme from '../../../src/theme';
 import DB from '../../../src/db';
 import Toast from 'react-native-root-toast';
+import CONSTANT from '../../../src/constant';
 
 const LIMIT_ITEM_CNT = 100;
 
@@ -101,28 +108,25 @@ const Recent = props => {
       setUpCnt(ucnt);
       setDataList([...dataList]);
 
-      Toast.show('刷新成功!', {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        backgroundColor: props.appTheme.toastBGColor,
-        textColor: Theme.constant.succeedColor,
-        shadow: false,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
+      if (props.currentIndex === CONSTANT.RECENT_INDEX) {
+        Toast.show('刷新成功!', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          backgroundColor: props.appTheme.floatBGColor,
+          textColor: titleColor,
+          shadow: false,
+        });
+      }
     } catch (e) {
-      Toast.show(`刷新失败!\n原因: ${e.toString()}`, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        backgroundColor: props.appTheme.toastBGColor,
-        textColor: Theme.constant.failedColor,
-        shadow: false,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-      console.log(e);
+      if (props.currentIndex === CONSTANT.RECENT_INDEX) {
+        Toast.show(`刷新失败!\n原因: ${e.toString()}`, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          backgroundColor: props.appTheme.floatBGColor,
+          textColor: Theme.constant.failedColor,
+          shadow: false,
+        });
+      }
     }
   };
 
@@ -281,12 +285,18 @@ const Recent = props => {
         data={dataList}
         extraData={dataList}
         keyExtractor={item => item.index}
-        refreshing={isLoading}
-        onRefresh={async () => {
-          setIsLoading(true);
-          await fetchData();
-          setIsLoading(false);
-        }}
+        refreshControl={
+          <RefreshControl
+            progressBackgroundColor={props.appTheme.floatBGColor}
+            colors={[titleColor]}
+            refreshing={isLoading}
+            onRefresh={async () => {
+              setIsLoading(true);
+              await fetchData();
+              setIsLoading(false);
+            }}
+          />
+        }
         renderItem={({item}) => (
           <View style={{height: 40}}>
             <View

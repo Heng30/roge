@@ -5,19 +5,22 @@ import Theme from './../../src/theme';
 import Recent from './recent/Recent';
 import News from './news/News';
 import My from './my/My';
+import CONSTANT from './../../src/constant';
 
-const RECENT_INDEX = 0;
-const NEWS_INDEX = 1;
-const ME_INDEX = 2;
+const RECENT_INDEX = CONSTANT.RECENT_INDEX;
+const NEWS_INDEX = CONSTANT.NEWS_INDEX;
+const ME_INDEX = CONSTANT.ME_INDEX;
 const DOUBLE_CLICK_INTERVAL = 400;
 
 const Main = props => {
   const [index, setIndex] = useState(RECENT_INDEX);
-  // const [index, setIndex] = useState(ME_INDEX);
+  // const [index, setIndex] = useState(NEWS_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
   const [btnClickTime, setBtnClickTime] = useState([null, null, null]);
   const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
+  const [isDoubleClickNewsBtn, setIsDoubleClickNewsBtn] = useState(false);
   const [isJump2Recent, setIsJump2Recent] = useState(false);
+  const [isJump2News, setIsJump2News] = useState(false);
 
   return (
     <View style={{height: '100%'}}>
@@ -29,11 +32,17 @@ const Main = props => {
             appTheme={props.appTheme}
             isDoubleClickRecentBtn={isDoubleClickRecentBtn}
             isJump2Recent={isJump2Recent}
+            currentIndex={index}
           />
         </View>
         <View
           style={{flex: 1, display: index === NEWS_INDEX ? 'flex' : 'none'}}>
-          <News appTheme={props.appTheme} />
+          <News
+            appTheme={props.appTheme}
+            isDoubleClickNewsBtn={isDoubleClickNewsBtn}
+            isJump2News={isJump2News}
+            currentIndex={index}
+          />
         </View>
         <View style={{flex: 1, display: index === ME_INDEX ? 'flex' : 'none'}}>
           <My
@@ -81,14 +90,25 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: 12,
+              fontSize: props.appTheme.fontSize,
             }}>
             行情
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.TOContainer}
-          onPress={() => setIndex(NEWS_INDEX)}>
+          onPress={() => {
+            const date = new Date();
+            if (btnClickTime[NEWS_INDEX]) {
+              if (date - btnClickTime[NEWS_INDEX] <= DOUBLE_CLICK_INTERVAL) {
+                setIsDoubleClickNewsBtn(a => !a);
+              }
+            }
+            btnClickTime[NEWS_INDEX] = date;
+
+            if (index !== NEWS_INDEX) setIsJump2News(a => !a);
+            setIndex(NEWS_INDEX);
+          }}>
           <Icon
             name="newspaper-outline"
             type="ionicon"

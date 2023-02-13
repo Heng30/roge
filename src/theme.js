@@ -9,7 +9,8 @@ export default {
     dividerColor: 'lightgray',
     iconColor: Colors.darker,
     fontColor: Colors.darker,
-    toastBGColor: 'white',
+    floatBGColor: 'white',
+    fontSize: 14,
   },
   dark: {
     mode: 'dark',
@@ -19,7 +20,8 @@ export default {
     dividerColor: 'gray',
     iconColor: Colors.lighter,
     fontColor: Colors.lighter,
-    toastBGColor: 'black',
+    floatBGColor: 'black',
+    fontSize: 14,
   },
   constant: {
     upColor: 'green',
@@ -28,6 +30,7 @@ export default {
     footerHeight: 50,
     succeedColor: 'green',
     failedColor: 'red',
+    padding: 8,
   },
   mode: 'light',
 };

@@ -38,8 +38,20 @@ function toPassTimeString(num) {
   else return String(Math.floor(num / 86400)) + 'd';
 }
 
+function toDateString(timestamp, isShortMode) {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  return (isShortMode ? '' : month + '-' + day + ' ') + (hours + ':' + minutes);
+}
+
 export default {
   toFixedPrice,
   toPercentString,
   toPassTimeString,
+  toDateString,
 };

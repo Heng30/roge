@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, Button} from 'react-native';
-import Toast from 'react-native-root-toast';
+import {View, Button} from 'react-native';
+import Quick from './Quick';
 
 const News = props => {
   const appTheme = props.appTheme;
@@ -9,11 +9,13 @@ const News = props => {
     <View
       style={{
         flex: 1,
-        backgroundColor: appTheme.backgroundColor,
-        alignItems: 'center',
-        justifyContent: 'center',
       }}>
-      <Text style={{color: appTheme.fontColor, fontSize: 30}}>没有实现</Text>
+      <Quick
+        appTheme={appTheme}
+        isDoubleClickNewsBtn={props.isDoubleClickNewsBtn}
+        isJump2News={props.isJump2News}
+        currentIndex={props.currentIndex}
+      />
     </View>
   );
 };
