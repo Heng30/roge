@@ -26,8 +26,6 @@ export default {
   constant: {
     upColor: 'green',
     downColor: 'red',
-    headerHeight: 40,
-    footerHeight: 50,
     succeedColor: 'green',
     failedColor: 'red',
     padding: 8,

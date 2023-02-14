@@ -1,4 +1,10 @@
-import {View, Text, RefreshControl, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  RefreshControl,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import {SafeAreaView, FlatList} from 'react-native';
 import Toast from 'react-native-root-toast';
@@ -20,8 +26,7 @@ const Quick = props => {
 
   const upFechData = async () => {
     try {
-      const url =
-        'https://api.theblockbeats.info/v29/newsflash/select?page=' + pageIndex;
+      const url = 'https://api.theblockbeats.info/v29/newsflash/select?page=1';
       const resp = await axios.get(url);
 
       if (resp.data.code !== 200) return;
@@ -77,7 +82,7 @@ const Quick = props => {
       if (rlist.length <= 0) return;
 
       rlist.forEach(item => {
-        if (dataList.findIndex(a => a.id == item.id) >= 0) return;
+        if (dataList.findIndex(a => a.id === item.id) >= 0) return;
         dataList.push({
           id: item.id,
           title: item.title,
@@ -166,9 +171,12 @@ const Quick = props => {
                   fontSize: appTheme.fontSize - 2,
                   color: appTheme.fontColor,
                 }}>
-                {util.toDateString(item.addTime, true)}
+                {util.toDateString(item.addTime * 1000, true)}
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (Linking.canOpenURL(item.url)) Linking.openURL(item.url);
+                }}>
                 <Text
                   style={{
                     fontSize: appTheme.fontSize - 2,

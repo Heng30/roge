@@ -40,11 +40,14 @@ function toPassTimeString(num) {
 
 function toDateString(timestamp, isShortMode) {
   if (!timestamp) return '';
-  const date = new Date(timestamp);
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+  let date = new Date(timestamp);
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+
+  if (hours < 10) hours = '0' + hours;
+  if (minutes < 10) minutes = '0' + minutes;
 
   return (isShortMode ? '' : month + '-' + day + ' ') + (hours + ':' + minutes);
 }

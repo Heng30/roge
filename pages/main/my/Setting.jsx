@@ -10,7 +10,6 @@ import Theme from '../../../src/theme';
 
 const SettingScreen = props => {
   const appTheme = props.screenProps.appTheme;
-  const setAppTheme = props.screenProps.setAppTheme;
 
   return (
     <SafeAreaView
@@ -21,8 +20,7 @@ const SettingScreen = props => {
       <View
         style={{
           flexDirection: 'row',
-          height: Theme.constant.headerHeight,
-          marginHorizontal: 10,
+          padding: Theme.constant.padding,
         }}>
         <View style={styles.headerItem}>
           <TouchableOpacity
@@ -33,8 +31,16 @@ const SettingScreen = props => {
           </TouchableOpacity>
         </View>
 
-        <View style={[styles.headerItem, {marginLeft: 10}]}>
-          <Text style={{color: appTheme.fontColor, fontSize: 18}}>设置</Text>
+        <View
+          style={[styles.headerItem, {paddingLeft: Theme.constant.padding}]}>
+          <Text
+            style={{
+              color: appTheme.fontColor,
+              fontSize: appTheme.fontSize + 4,
+              fontWeight: 'bold',
+            }}>
+            设置
+          </Text>
         </View>
       </View>
     </SafeAreaView>

@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
-import {useState} from 'react';
+import {StyleSheet, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {Icon} from '@rneui/themed';
 import Theme from '../../../src/theme';
 
@@ -17,9 +10,8 @@ const HomeScreen = props => {
       <View
         style={{
           flexDirection: 'row',
-          height: Theme.constant.headerHeight,
           justifyContent: 'space-between',
-          marginHorizontal: 10,
+          padding: Theme.constant.padding,
         }}>
         <View style={styles.headerItem}>
           <TouchableOpacity

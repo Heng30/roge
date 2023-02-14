@@ -10,13 +10,14 @@ import CONSTANT from './../../src/constant';
 const RECENT_INDEX = CONSTANT.RECENT_INDEX;
 const NEWS_INDEX = CONSTANT.NEWS_INDEX;
 const ME_INDEX = CONSTANT.ME_INDEX;
-const DOUBLE_CLICK_INTERVAL = 400;
+const DOUBLE_CLICK_INTERVAL = CONSTANT.DOUBLE_CLICK_INTERVAL;
 
 const Main = props => {
+  const appTheme = props.appTheme;
   const [index, setIndex] = useState(RECENT_INDEX);
   // const [index, setIndex] = useState(NEWS_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
-  const [btnClickTime, setBtnClickTime] = useState([null, null, null]);
+  const [btnClickTime] = useState([null, null, null]);
   const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
   const [isDoubleClickNewsBtn, setIsDoubleClickNewsBtn] = useState(false);
   const [isJump2Recent, setIsJump2Recent] = useState(false);
@@ -29,7 +30,7 @@ const Main = props => {
           style={{flex: 1, display: index === RECENT_INDEX ? 'flex' : 'none'}}>
           <Recent
             setIsBullMarket={setIsBullMarket}
-            appTheme={props.appTheme}
+            appTheme={appTheme}
             isDoubleClickRecentBtn={isDoubleClickRecentBtn}
             isJump2Recent={isJump2Recent}
             currentIndex={index}
@@ -38,7 +39,7 @@ const Main = props => {
         <View
           style={{flex: 1, display: index === NEWS_INDEX ? 'flex' : 'none'}}>
           <News
-            appTheme={props.appTheme}
+            appTheme={appTheme}
             isDoubleClickNewsBtn={isDoubleClickNewsBtn}
             isJump2News={isJump2News}
             currentIndex={index}
@@ -47,16 +48,16 @@ const Main = props => {
         <View style={{flex: 1, display: index === ME_INDEX ? 'flex' : 'none'}}>
           <My
             screenProps={{
-              appTheme: props.appTheme,
+              appTheme: appTheme,
               setAppTheme: props.setAppTheme,
             }}
           />
         </View>
       </View>
 
-      <Divider color={props.appTheme.dividerColor} />
+      <Divider color={appTheme.dividerColor} />
 
-      <View style={{height: Theme.footerHeight, flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={styles.TOContainer}
           onPress={() => {
@@ -90,7 +91,7 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: props.appTheme.fontSize,
+              fontSize: appTheme.fontSize,
             }}>
             行情
           </Text>
@@ -129,7 +130,7 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: 12,
+              fontSize: appTheme.fontSize,
             }}>
             资讯
           </Text>
@@ -157,7 +158,7 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: 12,
+              fontSize: appTheme.fontSize,
             }}>
             我
           </Text>
