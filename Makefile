@@ -27,4 +27,4 @@ copy-action-file:
 	cp -rf ./actionfile/android-release-key.keystore ./android/app/ && cp -rf ./actionfile/gradle.properties ./android/
 
 clean:
-	rm ./roge_android_*.apk
+	rm -f ./roge_android_*.apk
