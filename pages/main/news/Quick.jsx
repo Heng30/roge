@@ -175,7 +175,10 @@ const Quick = props => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  if (Linking.canOpenURL(item.url)) Linking.openURL(item.url);
+                  if (!item.url) return;
+                  const url = String(item.url);
+                  if (url.startsWith('http') && Linking.canOpenURL(url))
+                    Linking.openURL(url);
                 }}>
                 <Text
                   style={{
