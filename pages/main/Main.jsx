@@ -8,6 +8,7 @@ import My from './my/My';
 import CONSTANT from './../../src/constant';
 
 const RECENT_INDEX = CONSTANT.RECENT_INDEX;
+const DATA_INDEX = CONSTANT.DATA_INDEX;
 const NEWS_INDEX = CONSTANT.NEWS_INDEX;
 const ME_INDEX = CONSTANT.ME_INDEX;
 const DOUBLE_CLICK_INTERVAL = CONSTANT.DOUBLE_CLICK_INTERVAL;
@@ -91,9 +92,37 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: appTheme.fontSize,
+              fontSize: appTheme.fontSize - 3,
             }}>
             行情
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.TOContainer}
+          onPress={() => setIndex(DATA_INDEX)}>
+          <Icon
+            name="md-pulse-outline"
+            type="ionicon"
+            color={
+              index ===DATA_INDEX
+                ? isBullMarket
+                  ? Theme.constant.upColor
+                  : Theme.constant.downColor
+                : 'gray'
+            }
+          />
+
+          <Text
+            style={{
+              color:
+                index === DATA_INDEX
+                  ? isBullMarket
+                    ? Theme.constant.upColor
+                    : Theme.constant.downColor
+                  : 'gray',
+              fontSize: appTheme.fontSize - 3,
+            }}>
+            指数
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -130,7 +159,7 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: appTheme.fontSize,
+              fontSize: appTheme.fontSize - 3,
             }}>
             资讯
           </Text>
@@ -158,7 +187,7 @@ const Main = props => {
                     ? Theme.constant.upColor
                     : Theme.constant.downColor
                   : 'gray',
-              fontSize: appTheme.fontSize,
+              fontSize: appTheme.fontSize - 3,
             }}>
             我
           </Text>
@@ -170,7 +199,7 @@ const Main = props => {
 
 const styles = StyleSheet.create({
   TOContainer: {
-    width: '33.3%',
+    width: '25%',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -45,7 +45,7 @@ const Quick = props => {
         });
       });
 
-      setPageIndex(1);
+      setPageIndex(2);
       setDataList([...dataList]);
 
       if (props.currentIndex === CONSTANT.NEWS_INDEX) {
@@ -123,7 +123,7 @@ const Quick = props => {
         data={dataList}
         extraData={dataList}
         keyExtractor={item => item.id}
-        onEndReachedThreshold={0.05}
+        onEndReachedThreshold={0.1}
         onEndReached={async () => {
           await downFechData();
         }}
@@ -142,7 +142,7 @@ const Quick = props => {
         renderItem={({item}) => (
           <View
             style={{
-              paddingHorizontal: Theme.constant.padding,
+              paddingHorizontal: Theme.constant.padding * 1.5,
               paddingBottom: Theme.constant.padding * 2,
             }}>
             <Text
@@ -168,21 +168,29 @@ const Quick = props => {
               }}>
               <Text
                 style={{
-                  fontSize: appTheme.fontSize - 2,
+                  fontSize: appTheme.fontSize - 3,
                   color: appTheme.fontColor,
                 }}>
                 {util.toDateString(item.addTime * 1000, true)}
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  if (!item.url) return;
                   const url = String(item.url);
                   if (url.startsWith('http') && Linking.canOpenURL(url))
                     Linking.openURL(url);
+                  else {
+                    Toast.show('无法访问!', {
+                      duration: Toast.durations.SHORT,
+                      position: Toast.positions.TOP,
+                      backgroundColor: appTheme.floatBGColor,
+                      textColor: Theme.constant.failedColor,
+                      shadow: false,
+                    });
+                  }
                 }}>
                 <Text
                   style={{
-                    fontSize: appTheme.fontSize - 2,
+                    fontSize: appTheme.fontSize - 3,
                     color: appTheme.fontColor,
                     paddingHorizontal: Theme.constant.padding,
                   }}>

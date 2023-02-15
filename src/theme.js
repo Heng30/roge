@@ -10,7 +10,7 @@ export default {
     iconColor: Colors.darker,
     fontColor: Colors.darker,
     floatBGColor: 'white',
-    fontSize: 14,
+    fontSize: 15,
   },
   dark: {
     mode: 'dark',
@@ -21,7 +21,7 @@ export default {
     iconColor: Colors.lighter,
     fontColor: Colors.lighter,
     floatBGColor: 'black',
-    fontSize: 14,
+    fontSize: 15,
   },
   constant: {
     upColor: 'green',

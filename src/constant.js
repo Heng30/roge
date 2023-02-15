@@ -1,7 +1,8 @@
 export default {
   RECENT_INDEX: 0,
-  NEWS_INDEX: 1,
-  ME_INDEX: 2,
+  DATA_INDEX: 1,
+  NEWS_INDEX: 2,
+  ME_INDEX: 3,
   DOUBLE_CLICK_INTERVAL: 400,
   VERSION: '0.0.1',
 };

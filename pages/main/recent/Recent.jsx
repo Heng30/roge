@@ -159,7 +159,7 @@ const Recent = props => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          paddingVertical: Theme.constant.padding,
+          paddingVertical: Theme.constant.padding * 1.5,
         }}>
         <TouchableOpacity
           style={styles.smallItem}
@@ -326,7 +326,7 @@ const Recent = props => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              paddingVertical: Theme.constant.padding,
+              paddingVertical: Theme.constant.padding * 1.5,
             }}>
             <View style={[styles.smallItem, {alignItems: 'center'}]}>
               <View
