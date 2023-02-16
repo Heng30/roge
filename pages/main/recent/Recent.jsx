@@ -15,7 +15,7 @@ import DB from '../../../src/db';
 import Toast from 'react-native-root-toast';
 import CONSTANT from '../../../src/constant';
 
-const LIMIT_ITEM_CNT = 100;
+const LIMIT_ITEM_CNT = 10;
 
 const Recent = props => {
   const appTheme = props.appTheme;

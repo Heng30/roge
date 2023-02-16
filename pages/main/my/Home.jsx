@@ -1,6 +1,7 @@
 import {StyleSheet, View, TouchableOpacity, SafeAreaView} from 'react-native';
 import {Icon} from '@rneui/themed';
 import Theme from '../../../src/theme';
+import DB from '../../../src/db';
 
 const HomeScreen = props => {
   const appTheme = props.screenProps.appTheme;
@@ -26,11 +27,21 @@ const HomeScreen = props => {
           <TouchableOpacity
             onPress={() => {
               if (Theme.mode === 'light') {
-                setAppTheme(Theme.dark);
+                const theme = {
+                  ...Theme.dark,
+                  fontSize: appTheme.fontSize,
+                };
+                setAppTheme(theme);
                 Theme.mode = 'dark';
+                DB.settingTable.update('themeMode', Theme.mode);
               } else {
-                setAppTheme(Theme.light);
+                const theme = {
+                  ...Theme.light,
+                  fontSize: appTheme.fontSize,
+                };
+                setAppTheme(theme);
                 Theme.mode = 'light';
+                DB.settingTable.update('themeMode', Theme.mode);
               }
             }}>
             <Icon
