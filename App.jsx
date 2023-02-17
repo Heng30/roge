@@ -22,8 +22,10 @@ const App = () => {
       if (themeMode) {
         if (themeMode === 'light') {
           setAppTheme(Theme.light);
+          Theme.mode = 'light'
         } else {
           setAppTheme(Theme.dark);
+          Theme.mode = 'dark'
         }
       }
     });

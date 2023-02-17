@@ -3,6 +3,7 @@ import {Icon, Divider} from '@rneui/themed';
 import React, {useState} from 'react';
 import Theme from './../../src/theme';
 import Recent from './recent/Recent';
+import Data from './data/Data';
 import News from './news/News';
 import My from './my/My';
 import CONSTANT from './../../src/constant';
@@ -17,10 +18,12 @@ const Main = props => {
   const appTheme = props.appTheme;
   // const [index, setIndex] = useState(RECENT_INDEX);
   // const [index, setIndex] = useState(NEWS_INDEX);
-  const [index, setIndex] = useState(ME_INDEX);
+  // const [index, setIndex] = useState(ME_INDEX);
+  const [index, setIndex] = useState(DATA_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
-  const [btnClickTime] = useState([null, null, null]);
+  const [btnClickTime] = useState([null, null, null, null]);
   const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
+  const [isDoubleClickDataBtn, setIsDoubleClickDataBtn] = useState(false);
   const [isDoubleClickNewsBtn, setIsDoubleClickNewsBtn] = useState(false);
   const [isJump2Recent, setIsJump2Recent] = useState(false);
   const [isJump2News, setIsJump2News] = useState(false);
@@ -35,6 +38,15 @@ const Main = props => {
             appTheme={appTheme}
             isDoubleClickRecentBtn={isDoubleClickRecentBtn}
             isJump2Recent={isJump2Recent}
+            currentIndex={index}
+          />
+        </View>
+        <View
+          style={{flex: 1, display: index === DATA_INDEX ? 'flex' : 'none'}}>
+          <Data
+            setIsBullMarket={setIsBullMarket}
+            appTheme={appTheme}
+            isDoubleClickDataBtn={isDoubleClickDataBtn}
             currentIndex={index}
           />
         </View>
@@ -100,12 +112,21 @@ const Main = props => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.TOContainer}
-          onPress={() => setIndex(DATA_INDEX)}>
+          onPress={() => {
+            const date = new Date();
+            if (btnClickTime[DATA_INDEX]) {
+              if (date - btnClickTime[DATA_INDEX] <= DOUBLE_CLICK_INTERVAL) {
+                setIsDoubleClickDataBtn(a => !a);
+              }
+            }
+            btnClickTime[DATA_INDEX] = date;
+            setIndex(DATA_INDEX);
+          }}>
           <Icon
             name="md-pulse-outline"
             type="ionicon"
             color={
-              index ===DATA_INDEX
+              index === DATA_INDEX
                 ? isBullMarket
                   ? Theme.constant.upColor
                   : Theme.constant.downColor
