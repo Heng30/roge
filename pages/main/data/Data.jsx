@@ -1,11 +1,16 @@
 import {Text, View, RefreshControl} from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import {SafeAreaView, SectionList} from 'react-native';
-import {Divider} from '@rneui/themed';
+import {Divider, Button} from '@rneui/themed';
 import Fetch from './fetch';
 import Theme from '../../../src/theme';
 import Toast from 'react-native-root-toast';
 import CONSTANT from '../../../src/constant';
+
+const titleECO = '经济指数';
+const titleCPO = '加密指数';
+const ECO_INDEX = 0;
+const CPO_INDEX = 1;
 
 const Data = props => {
   const appTheme = props.appTheme;
@@ -22,64 +27,48 @@ const Data = props => {
 
   const fetchData = async () => {
     if (dataList.length <= 0) {
-      const titleECO = '经济指数';
-      const dataECO = [
-        '上证指数',
-        '深证成指',
-        '创业板指',
-        '美元指数',
-        '标普500 ',
-        '离岸人名币',
-        '美国10年期国债收益率',
-      ];
-      dataList.push({
-        title: titleECO,
-        data: dataECO.map(item => {
-          return {
-            name: item,
-            value: 'N/A',
-          };
-        }),
-      });
-
-      const titleCPO = '加密指数';
-      const dataCPO = [
-        '加密货币总市值(美元)',
-        '24小时交易量(美元)',
-        '24小时BTC多空比',
-        'BTC市值占比',
-        '今日/昨日贪婪指数',
-        '以太坊油费',
-      ];
-
-      dataList.push({
-        title: titleCPO,
-        data: dataCPO.map(item => {
-          return {
-            name: item,
-            value: 'N/A',
-          };
-        }),
-      });
-    } else {
-      dataList.forEach(item => {
-        item.data.forEach(it => {
-          it.value = 'N/A';
+      [titleECO, titleCPO].forEach(title => {
+        dataList.push({
+          title: title,
+          data: [],
         });
       });
     }
-
     try {
-      // TODO: 更新数据
+      dataList.forEach(item => {
+        item.data.splice(0, item.data.length);
+      });
+
+      const errors = [];
+      await Fetch.ECO(items => {
+        dataList[ECO_INDEX].data = items;
+      }, errors);
+
       setDataList([...dataList]);
       if (props.currentIndex === CONSTANT.DATA_INDEX) {
-        Toast.show('刷新成功!', {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          backgroundColor: appTheme.floatBGColor,
-          textColor: Theme.constant.succeedColor,
-          shadow: false,
-        });
+        if (errors.length > 0) {
+          let errstr = '';
+          errors.forEach(e => {
+            errstr += e.toString();
+            errstr += '\n';
+          });
+          errstr.trim();
+          Toast.show(`刷新失败!\n原因: ${errstr}`, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.TOP,
+            backgroundColor: appTheme.floatBGColor,
+            textColor: Theme.constant.failedColor,
+            shadow: false,
+          });
+        } else {
+          Toast.show('刷新成功!', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.TOP,
+            backgroundColor: appTheme.floatBGColor,
+            textColor: Theme.constant.succeedColor,
+            shadow: false,
+          });
+        }
       }
     } catch (e) {
       if (props.currentIndex === CONSTANT.DATA_INDEX) {
@@ -151,23 +140,43 @@ const Data = props => {
             }}>
             <Text
               style={{
-                width: '70%',
-                color: item.color ? item.color : appTheme.fontColor,
+                width: '60%',
+                color: !!item.color ? item.color : appTheme.fontColor,
                 fontSize: appTheme.fontSize,
               }}>
               {item.name}
             </Text>
             <Text
               style={{
-                width: '30%',
-                color: item.color ? item.color : appTheme.fontColor,
+                width: '20%',
+                color: !!item.color ? item.color : appTheme.fontColor,
                 fontSize: appTheme.fontSize,
               }}>
               {item.value}
             </Text>
+            <Text
+              style={{
+                width: '20%',
+                color: !!item.color ? item.color : appTheme.fontColor,
+                fontSize: appTheme.fontSize,
+              }}>
+              {item.rate}
+            </Text>
           </View>
         )}
       />
+      <View style={{display: 'none'}}>
+        <Button
+          onPress={async () => {
+            await Fetch.ECO(items => {
+              dataList[ECO_INDEX].data = items;
+              setDataList([...dataList]);
+            });
+            // console.log(dataList[ECO_INDEX].data)
+          }}>
+          Fetch
+        </Button>
+      </View>
     </SafeAreaView>
   );
 };

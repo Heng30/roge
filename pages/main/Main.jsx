@@ -16,10 +16,7 @@ const DOUBLE_CLICK_INTERVAL = CONSTANT.DOUBLE_CLICK_INTERVAL;
 
 const Main = props => {
   const appTheme = props.appTheme;
-  // const [index, setIndex] = useState(RECENT_INDEX);
-  // const [index, setIndex] = useState(NEWS_INDEX);
-  // const [index, setIndex] = useState(ME_INDEX);
-  const [index, setIndex] = useState(DATA_INDEX);
+  const [index, setIndex] = useState(CONSTANT.INIT_BTN_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
   const [btnClickTime] = useState([null, null, null, null]);
   const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
