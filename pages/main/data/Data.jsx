@@ -40,9 +40,11 @@ const Data = props => {
       });
 
       const errors = [];
-      await Fetch.ECO(items => {
-        dataList[ECO_INDEX].data = items;
-      }, errors);
+      await Promise.allSettled([
+        Fetch.ECO(items => {
+          dataList[ECO_INDEX].data = items;
+        }, errors),
+      ]);
 
       setDataList([...dataList]);
       if (props.currentIndex === CONSTANT.DATA_INDEX) {

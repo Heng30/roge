@@ -15,7 +15,7 @@ const ECO = async (cb, errors) => {
         value: Number(item[2]).toFixed(2),
         rate: util.toPercentString(Number(item[4])),
         color:
-          Number(item[4]) < 0
+          Number(item[4]) >= 0
             ? Theme.constant.upColor
             : Theme.constant.downColor,
       };
