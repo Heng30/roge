@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import {SafeAreaView, FlatList} from 'react-native';
 import {Divider} from '@rneui/themed';
@@ -7,27 +13,21 @@ import util from '../../../src/util';
 import Theme from '../../../src/theme';
 import DB from '../../../src/db';
 import Toast from 'react-native-root-toast';
+import CONSTANT from '../../../src/constant';
 
-const LIMIT_ITEM_CNT = 100;
+const LIMIT_ITEM_CNT = CONSTANT.RECENT_LIMIT_ITEM_CNT;
 
 const Recent = props => {
+  const appTheme = props.appTheme;
   const flatListRef = useRef(null);
   const [dataList, setDataList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [upCnt, setUpCnt] = useState([0, 0, 0]);
   const [titleColor, setTitleColor] = useState(Theme.constant.downColor);
-  const [markSymbolList, setMarkSymbolList] = useState([]);
+  const [markSymbolList] = useState([]);
   const [refreshTimestand, setRefreshTimestand] = useState(new Date());
   const [passTimestand, setPassTimestand] = useState(new Date());
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSortUp, setIsSortUp] = useState([
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [isSortUp] = useState([true, false, false, false, false, false]);
 
   useEffect(() => {
     if (dataList.length > 0) flatListRef.current.scrollToIndex({index: 0});
@@ -101,28 +101,25 @@ const Recent = props => {
       setUpCnt(ucnt);
       setDataList([...dataList]);
 
-      Toast.show('刷新成功!', {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        backgroundColor: props.appTheme.toastBGColor,
-        textColor: Theme.constant.succeedColor,
-        shadow: false,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
+      if (props.currentIndex === CONSTANT.RECENT_INDEX) {
+        Toast.show('刷新成功!', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          backgroundColor: appTheme.floatBGColor,
+          textColor: titleColor,
+          shadow: false,
+        });
+      }
     } catch (e) {
-      Toast.show(`刷新失败!\n原因: ${e.toString()}`, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        backgroundColor: props.appTheme.toastBGColor,
-        textColor: Theme.constant.failedColor,
-        shadow: false,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-      console.log(e);
+      if (props.currentIndex === CONSTANT.RECENT_INDEX) {
+        Toast.show(`刷新失败!\n原因: ${e.toString()}`, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          backgroundColor: appTheme.floatBGColor,
+          textColor: Theme.constant.failedColor,
+          shadow: false,
+        });
+      }
     }
   };
 
@@ -157,175 +154,229 @@ const Recent = props => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1, height: '100%'}}>
-      <View style={{height: 40}}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            height: '100%',
-            alignItems: 'center',
-          }}>
-          <TouchableOpacity
-            style={styles.smallItem}
-            onPress={() => {
-              if (isSortUp[0])
-                dataList.sort((a, b) => {
-                  let n = Number(a.mark) - Number(b.mark);
-                  if (n === 0) return a.index - b.index;
-                  return n;
-                });
-              else
-                dataList.sort((a, b) => {
-                  let n = Number(b.mark) - Number(a.mark);
-                  if (n === 0) return a.index - b.index;
-                  return n;
-                });
+    <SafeAreaView style={{flex: 1}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: Theme.constant.padding * 1.5,
+        }}>
+        <TouchableOpacity
+          style={styles.smallItem}
+          onPress={() => {
+            if (isSortUp[0])
+              dataList.sort((a, b) => {
+                let n = Number(a.mark) - Number(b.mark);
+                if (n === 0) return a.index - b.index;
+                return n;
+              });
+            else
+              dataList.sort((a, b) => {
+                let n = Number(b.mark) - Number(a.mark);
+                if (n === 0) return a.index - b.index;
+                return n;
+              });
 
-              setDataList([...dataList]);
-              isSortUp[0] = !isSortUp[0];
+            setDataList([...dataList]);
+            isSortUp[0] = !isSortUp[0];
+          }}>
+          <Text
+            style={{
+              color: titleColor,
+              textAlign: 'center',
+              fontSize: appTheme.fontSize,
             }}>
-            <Text style={{color: titleColor, textAlign: 'center'}}>关注</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.smallItem}
-            onPress={() => {
-              if (isSortUp[1])
-                dataList.sort((a, b) => Number(a.index) - Number(b.index));
-              else dataList.sort((a, b) => Number(b.index) - Number(a.index));
-              setDataList([...dataList]);
-              isSortUp[1] = !isSortUp[1];
+            关注
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.smallItem}
+          onPress={() => {
+            if (isSortUp[1])
+              dataList.sort((a, b) => Number(a.index) - Number(b.index));
+            else dataList.sort((a, b) => Number(b.index) - Number(a.index));
+            setDataList([...dataList]);
+            isSortUp[1] = !isSortUp[1];
+          }}>
+          <Text
+            style={{
+              color: titleColor,
+              textAlign: 'center',
+              fontSize: appTheme.fontSize,
             }}>
-            <Text style={{color: titleColor, textAlign: 'center'}}>排行</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bigItem}
-            onPress={() => {
-              if (isSortUp[2])
-                dataList.sort((a, b) =>
-                  String(a.symbol).toUpperCase() >
-                  String(b.symbol).toUpperCase()
-                    ? 1
-                    : -1,
-                );
-              else
-                dataList.sort((a, b) =>
-                  String(b.symbol).toUpperCase() >
-                  String(a.symbol).toUpperCase()
-                    ? 1
-                    : -1,
-                );
-              setDataList([...dataList]);
-              isSortUp[2] = !isSortUp[2];
+            排行
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bigItem}
+          onPress={() => {
+            if (isSortUp[2])
+              dataList.sort((a, b) =>
+                String(a.symbol).toUpperCase() > String(b.symbol).toUpperCase()
+                  ? 1
+                  : -1,
+              );
+            else
+              dataList.sort((a, b) =>
+                String(b.symbol).toUpperCase() > String(a.symbol).toUpperCase()
+                  ? 1
+                  : -1,
+              );
+            setDataList([...dataList]);
+            isSortUp[2] = !isSortUp[2];
+          }}>
+          <Text
+            style={{
+              color: titleColor,
+              textAlign: 'center',
+              fontSize: appTheme.fontSize,
             }}>
-            <Text style={{color: titleColor, textAlign: 'center'}}>代币</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bigItem}
-            onPress={() => {
-              if (isSortUp[3])
-                dataList.sort((a, b) => Number(a.price) - Number(b.price));
-              else dataList.sort((a, b) => Number(b.price) - Number(a.price));
-              setDataList([...dataList]);
-              isSortUp[3] = !isSortUp[3];
+            代币
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bigItem}
+          onPress={() => {
+            if (isSortUp[3])
+              dataList.sort((a, b) => Number(a.price) - Number(b.price));
+            else dataList.sort((a, b) => Number(b.price) - Number(a.price));
+            setDataList([...dataList]);
+            isSortUp[3] = !isSortUp[3];
+          }}>
+          <Text
+            style={{
+              color: titleColor,
+              textAlign: 'center',
+              fontSize: appTheme.fontSize,
             }}>
-            <Text style={{color: titleColor, textAlign: 'center'}}>
-              价格(
-              {util.toPassTimeString(
-                Math.floor((passTimestand - refreshTimestand) / 1000),
-              )}
-              )
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bigItem}
-            onPress={() => {
-              if (isSortUp[4])
-                dataList.sort(
-                  (a, b) => Number(a.precent24h) - Number(b.precent24h),
-                );
-              else
-                dataList.sort(
-                  (a, b) => Number(b.precent24h) - Number(a.precent24h),
-                );
-              setDataList([...dataList]);
-              isSortUp[4] = !isSortUp[4];
+            价格(
+            {util.toPassTimeString(
+              Math.floor((passTimestand - refreshTimestand) / 1000),
+            )}
+            )
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bigItem}
+          onPress={() => {
+            if (isSortUp[4])
+              dataList.sort(
+                (a, b) => Number(a.precent24h) - Number(b.precent24h),
+              );
+            else
+              dataList.sort(
+                (a, b) => Number(b.precent24h) - Number(a.precent24h),
+              );
+            setDataList([...dataList]);
+            isSortUp[4] = !isSortUp[4];
+          }}>
+          <Text
+            style={{
+              color: titleColor,
+              textAlign: 'center',
+              fontSize: appTheme.fontSize,
             }}>
-            <Text style={{color: titleColor, textAlign: 'center'}}>
-              24h({upCnt[1]}%)
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.bigItem}
-            onPress={() => {
-              if (isSortUp[5])
-                dataList.sort(
-                  (a, b) => Number(a.precent7d) - Number(b.precent7d),
-                );
-              else
-                dataList.sort(
-                  (a, b) => Number(b.precent7d) - Number(a.precent7d),
-                );
-              setDataList([...dataList]);
-              isSortUp[5] = !isSortUp[5];
+            24h({upCnt[1]}%)
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bigItem}
+          onPress={() => {
+            if (isSortUp[5])
+              dataList.sort(
+                (a, b) => Number(a.precent7d) - Number(b.precent7d),
+              );
+            else
+              dataList.sort(
+                (a, b) => Number(b.precent7d) - Number(a.precent7d),
+              );
+            setDataList([...dataList]);
+            isSortUp[5] = !isSortUp[5];
+          }}>
+          <Text
+            style={{
+              color: titleColor,
+              textAlign: 'center',
+              fontSize: appTheme.fontSize,
             }}>
-            <Text style={{color: titleColor, textAlign: 'center'}}>
-              7d({upCnt[2]}%)
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Divider color={props.appTheme.dividerColor} />
+            7d({upCnt[2]}%)
+          </Text>
+        </TouchableOpacity>
       </View>
+      <Divider color={appTheme.dividerColor} />
       <FlatList
         ref={flatListRef}
         data={dataList}
         extraData={dataList}
         keyExtractor={item => item.index}
-        refreshing={isLoading}
-        onRefresh={async () => {
-          setIsLoading(true);
-          await fetchData();
-          setIsLoading(false);
-        }}
+        refreshControl={
+          <RefreshControl
+            progressBackgroundColor={appTheme.floatBGColor}
+            colors={[titleColor]}
+            refreshing={isLoading}
+            onRefresh={async () => {
+              setIsLoading(true);
+              await fetchData();
+              setIsLoading(false);
+            }}
+          />
+        }
         renderItem={({item}) => (
-          <View style={{height: 40}}>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                height: '100%',
-                alignItems: 'center',
-              }}>
-              <View style={[styles.smallItem, {alignItems: 'center'}]}>
-                <View
-                  style={[
-                    {
-                      backgroundColor: item.mark
-                        ? item.color
-                        : props.appTheme.markCircleColor,
-                    },
-                    styles.circle,
-                  ]}
-                  onStartShouldSetResponder={() => {
-                    toggleMark(item.index);
-                  }}></View>
-              </View>
-              <Text style={[styles.smallItem, {color: item.color}]}>
-                {item.index}
-              </Text>
-              <Text style={[styles.bigItem, {color: item.color}]}>
-                {item.symbol}
-              </Text>
-              <Text style={[styles.bigItem, {color: item.color}]}>
-                {item.price}
-              </Text>
-              <Text style={[styles.bigItem, {color: item.color}]}>
-                {util.toPercentString(item.precent24h)}
-              </Text>
-              <Text style={[styles.bigItem, {color: item.color}]}>
-                {util.toPercentString(item.precent7d)}
-              </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: Theme.constant.padding * 1.5,
+            }}>
+            <View style={[styles.smallItem, {alignItems: 'center'}]}>
+              <View
+                style={[
+                  {
+                    backgroundColor: item.mark
+                      ? item.color
+                      : appTheme.markCircleColor,
+                  },
+                  styles.circle,
+                ]}
+                onStartShouldSetResponder={() => {
+                  toggleMark(item.index);
+                }}></View>
             </View>
+            <Text
+              style={[
+                styles.smallItem,
+                {color: item.color, fontSize: appTheme.fontSize},
+              ]}>
+              {item.index}
+            </Text>
+            <Text
+              style={[
+                styles.bigItem,
+                {color: item.color, fontSize: appTheme.fontSize},
+              ]}>
+              {item.symbol}
+            </Text>
+            <Text
+              style={[
+                styles.bigItem,
+                {color: item.color, fontSize: appTheme.fontSize},
+              ]}>
+              {item.price}
+            </Text>
+            <Text
+              style={[
+                styles.bigItem,
+                {color: item.color, fontSize: appTheme.fontSize},
+              ]}>
+              {util.toPercentString(item.precent24h)}
+            </Text>
+            <Text
+              style={[
+                styles.bigItem,
+                {color: item.color, fontSize: appTheme.fontSize},
+              ]}>
+              {util.toPercentString(item.precent7d)}
+            </Text>
           </View>
         )}
       />

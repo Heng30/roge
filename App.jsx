@@ -5,12 +5,31 @@ import {RootSiblingParent} from 'react-native-root-siblings';
 import SBar from './pages/SBar';
 import Main from './pages/main/Main';
 import Theme from './src/theme';
+import DB from './src/db';
 
 const App = () => {
   const [appTheme, setAppTheme] = useState(Theme.light);
   useEffect(() => {
     SplashScreen.hide();
   });
+
+  useEffect(() => {
+    DB.settingTable.get('fontSize', fontSize => {
+      Theme.light.fontSize = Number(fontSize);
+      Theme.dark.fontSize = Number(fontSize);
+    });
+    DB.settingTable.get('themeMode', themeMode => {
+      if (themeMode) {
+        if (themeMode === 'light') {
+          setAppTheme(Theme.light);
+          Theme.mode = 'light'
+        } else {
+          setAppTheme(Theme.dark);
+          Theme.mode = 'dark'
+        }
+      }
+    });
+  }, []);
 
   return (
     <RootSiblingParent>
