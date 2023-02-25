@@ -6,4 +6,6 @@ export default {
   ME_INDEX: 3,
   DOUBLE_CLICK_INTERVAL: 400,
   RECENT_LIMIT_ITEM_CNT: 100,
+
+  WEI_PER_ETH: 1e18,
 };

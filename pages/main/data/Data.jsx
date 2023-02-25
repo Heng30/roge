@@ -44,7 +44,32 @@ const Data = props => {
         Fetch.ECO(items => {
           dataList[ECO_INDEX].data = items;
         }, errors),
+
+        Fetch.CPO_FearGreed(item => {
+          dataList[CPO_INDEX].data.push(item);
+        }, errors),
+
+        Fetch.CPO_Market(items => {
+          items.forEach(item => {
+            dataList[CPO_INDEX].data.push(item);
+          });
+        }, errors),
+
+        Fetch.CPO_ETHBurned(item => {
+          dataList[CPO_INDEX].data.push(item);
+        }, errors),
+
+        Fetch.CPO_LongShort(item => {
+          dataList[CPO_INDEX].data.push(item);
+        }, errors),
+
+        Fetch.CPO_Blast(item => {
+          dataList[CPO_INDEX].data.push(item);
+        }, errors),
       ]);
+      dataList[CPO_INDEX].data.sort((a, b) =>
+        a.name > b.name ? 1 : a.name === b.name ? 0 : -1,
+      );
 
       setDataList([...dataList]);
       if (props.currentIndex === CONSTANT.DATA_INDEX) {
@@ -150,7 +175,7 @@ const Data = props => {
             </Text>
             <Text
               style={{
-                width: '20%',
+                width: item.rate === undefined ? '40%' : '25%',
                 color: !!item.color ? item.color : appTheme.fontColor,
                 fontSize: appTheme.fontSize,
               }}>
@@ -158,7 +183,8 @@ const Data = props => {
             </Text>
             <Text
               style={{
-                width: '20%',
+                display: item.rate === undefined ? 'none' : 'flex',
+                width: '15%',
                 color: !!item.color ? item.color : appTheme.fontColor,
                 fontSize: appTheme.fontSize,
               }}>
