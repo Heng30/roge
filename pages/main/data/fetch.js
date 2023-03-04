@@ -117,7 +117,7 @@ const CPO_LongShort = async (cb, errors) => {
       name: `${data[0].symbol}多空比`,
       value: util.toPercentString(data[0].longRate),
       color:
-        Number(data.longRate) >= 50
+        Number(data[0].longRate) >= 50
           ? Theme.constant.upColor
           : Theme.constant.downColor,
     };

@@ -4,12 +4,14 @@ import React, {useState} from 'react';
 import Theme from './../../src/theme';
 import Recent from './recent/Recent';
 import Data from './data/Data';
+import Event from './event/Event';
 import News from './news/News';
 import My from './my/My';
 import CONSTANT from './../../src/constant';
 
 const RECENT_INDEX = CONSTANT.RECENT_INDEX;
 const DATA_INDEX = CONSTANT.DATA_INDEX;
+const EVENT_INDEX = CONSTANT.EVENT_INDEX;
 const NEWS_INDEX = CONSTANT.NEWS_INDEX;
 const ME_INDEX = CONSTANT.ME_INDEX;
 const DOUBLE_CLICK_INTERVAL = CONSTANT.DOUBLE_CLICK_INTERVAL;
@@ -18,9 +20,10 @@ const Main = props => {
   const appTheme = props.appTheme;
   const [index, setIndex] = useState(CONSTANT.INIT_BTN_INDEX);
   const [isBullMarket, setIsBullMarket] = useState(false);
-  const [btnClickTime] = useState([null, null, null, null]);
+  const [btnClickTime] = useState([null, null, null, null, null]);
   const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
   const [isDoubleClickDataBtn, setIsDoubleClickDataBtn] = useState(false);
+  const [isDoubleClickEventBtn, setIsDoubleClickEventBtn] = useState(false);
   const [isDoubleClickNewsBtn, setIsDoubleClickNewsBtn] = useState(false);
   const [isJump2Recent, setIsJump2Recent] = useState(false);
   const [isJump2News, setIsJump2News] = useState(false);
@@ -44,6 +47,14 @@ const Main = props => {
             setIsBullMarket={setIsBullMarket}
             appTheme={appTheme}
             isDoubleClickDataBtn={isDoubleClickDataBtn}
+            currentIndex={index}
+          />
+        </View>
+        <View
+          style={{flex: 1, display: index === EVENT_INDEX ? 'flex' : 'none'}}>
+          <Event
+            appTheme={appTheme}
+            isDoubleClickEventBtn={isDoubleClickEventBtn}
             currentIndex={index}
           />
         </View>
@@ -148,6 +159,43 @@ const Main = props => {
           style={styles.TOContainer}
           onPress={() => {
             const date = new Date();
+            if (btnClickTime[EVENT_INDEX]) {
+              if (date - btnClickTime[EVENT_INDEX] <= DOUBLE_CLICK_INTERVAL) {
+                setIsDoubleClickEventBtn(a => !a);
+              }
+            }
+            btnClickTime[EVENT_INDEX] = date;
+            setIndex(EVENT_INDEX);
+          }}>
+          <Icon
+            name="calendar-outline"
+            type="ionicon"
+            color={
+              index === EVENT_INDEX
+                ? isBullMarket
+                  ? Theme.constant.upColor
+                  : Theme.constant.downColor
+                : 'gray'
+            }
+          />
+
+          <Text
+            style={{
+              color:
+                index === EVENT_INDEX
+                  ? isBullMarket
+                    ? Theme.constant.upColor
+                    : Theme.constant.downColor
+                  : 'gray',
+              fontSize: appTheme.fontSize - 3,
+            }}>
+            事件
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.TOContainer}
+          onPress={() => {
+            const date = new Date();
             if (btnClickTime[NEWS_INDEX]) {
               if (date - btnClickTime[NEWS_INDEX] <= DOUBLE_CLICK_INTERVAL) {
                 setIsDoubleClickNewsBtn(a => !a);
@@ -218,7 +266,7 @@ const Main = props => {
 
 const styles = StyleSheet.create({
   TOContainer: {
-    width: '25%',
+    width: '20%',
     justifyContent: 'center',
     alignItems: 'center',
   },
