@@ -123,6 +123,7 @@ const Recent = props => {
         refreshControl={
           <RefreshControl
             progressBackgroundColor={appTheme.floatBGColor}
+            colors={[appTheme.fontColor]}
             refreshing={isLoading}
             onRefresh={async () => {
               setIsLoading(true);
