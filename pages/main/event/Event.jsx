@@ -35,14 +35,20 @@ const Recent = props => {
         if (importance < 2) return;
 
         const unit = item.unit ? item.unit : '';
-        const value = `${item.actual}${unit}/${item.forecast}${unit}/${item.previous}${unit}`;
+        const value = (() => {
+          if (!item.actual && !item.previous && !item.forecast) return '';
+          return (
+            `${item.actual}/${item.forecast}/${item.previous}` +
+            (!unit ? '' : `(${unit})`)
+          );
+        })();
 
         dataList.push({
           id: item.id,
           time: util.toDateString(Number(item.public_date) * 1000, false),
           country: item.country,
           title: item.title,
-          value: value === '//' ? '' : value,
+          value: value,
           color:
             importance < 3 ? Theme.constant.upColor : Theme.constant.downColor,
         });

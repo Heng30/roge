@@ -1,7 +1,7 @@
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import HomeScreen from './Home';
-import SettingScreen from './Setting';
+import SettingScreen from './setting/Setting';
 
 const AppNavigator = createStackNavigator({
   Home: {

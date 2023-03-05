@@ -129,7 +129,7 @@ const settingTable = {
   },
 };
 
-const uploadAllData = async cb => {
+const syncAllData = async cb => {
   const priceMarkTablePromise = new Promise((resolve, reject) => {
     let isResolve = false;
     setTimeout(() => {
@@ -174,96 +174,40 @@ const uploadAllData = async cb => {
       }
     });
 
-    const errors = [];
     const respList = [];
-    const names = ['markCoins', 'roge'];
     const values = [markCoins, dataList];
-    for (let i = 0; i < names.length; i++) {
-      const rurl = url + '/' + names[i];
-      try {
-        const resp = await axios.post(rurl, JSON.stringify(values[i]), {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        respList.push(resp);
-      } catch (e) {
-        errors.push(e.toString());
-      }
-    }
-
-    respList.forEach(item => {
-      if (item.status !== 200 && !!item.data && item.data.code !== 0)
-        errors.push(item.data.error);
-    });
-
-    cb(errors);
-  } catch (e) {
-    cb([e.toString()]);
-  }
-};
-
-const downloadAllData = async cb => {
-  try {
-    const url = await new Promise((resolve, reject) => {
-      let isResolve = false;
-      setTimeout(() => {
-        if (isResolve) return;
-        reject('');
-      }, 3000);
-      settingTable.get('syncsvrAPI', item => {
-        isResolve = true;
-        resolve(item);
+    ['markCoins', 'roge'].forEach(async (item, index) => {
+      const rurl = url + '/' + item;
+      const resp = await axios.post(rurl, JSON.stringify(values[index]), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+        console.log("fj", resp.status)
+
+      respList.push(resp);
     });
 
     const errors = [];
-    const names = ['markCoins', 'roge'];
-    for (let i = 0; i < names.length; i++) {
-      const rurl = url + '/' + names[i];
-      try {
-        const resp = await axios.get(rurl);
-        if (resp.status !== 200) {
-          if (!!resp.data && resp.data.code !== 0) {
-            errors.push(item.data.error);
-          }
-        } else {
-          if (i === 0) {
-            const data = JSON.parse(resp.data.data);
-            if (Array.isArray(data)) {
-              priceMarkTable.load(items => {
-                items.forEach(item => {
-                  priceMarkTable.delete(item);
-                });
-                data.forEach(item => {
-                  priceMarkTable.insert(item);
-                });
-              });
-            }
-          } else if (i === 1) {
-            const data = JSON.parse(resp.data.data);
-            if (Array.isArray(data)) {
-              data.forEach(item => {
-                settingTable.get(item.name, () => {
-                  settingTable.update(item.name, item.value);
-                });
-              });
-            }
-          }
-        }
-      } catch (e) {
-        errors.push(e.toString());
+    respList.forEach(item => {
+        console.log("fjie", item.status)
+      if (item.status !== 200) {
+        errors.push(item.data);
+      } else {
+        if (item.data.code !== 0) errors.push(item.data);
       }
-    }
+    });
+
     cb(errors);
   } catch (e) {
-    cb([e.toString()]);
+      console.log("xx", e)
+
+    cb(e);
   }
 };
 
 export default {
   priceMarkTable,
   settingTable,
-  uploadAllData,
-  downloadAllData,
+  syncAllData,
 };

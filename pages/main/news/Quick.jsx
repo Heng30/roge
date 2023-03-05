@@ -31,7 +31,7 @@ const Quick = props => {
 
       if (resp.data.code !== 200) return;
       const rlist = resp.data.data.data;
-      console.log(rlist.length);
+      console.log("news length: ", rlist.length);
       if (rlist.length <= 0) return;
 
       dataList.splice(0, dataList.length);

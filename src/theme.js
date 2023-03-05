@@ -7,6 +7,7 @@ export default {
     markCircleColor: 'lightgray',
     barStyle: 'dark-content',
     dividerColor: 'lightgray',
+    borderColor: 'lightgray',
     iconColor: Colors.darker,
     fontColor: Colors.darker,
     floatBGColor: 'white',
@@ -18,6 +19,7 @@ export default {
     markCircleColor: 'gray',
     barStyle: 'light-content',
     dividerColor: 'gray',
+    borderColor: 'gray',
     iconColor: Colors.lighter,
     fontColor: Colors.lighter,
     floatBGColor: 'black',
@@ -29,6 +31,7 @@ export default {
     succeedColor: 'green',
     failedColor: 'red',
     padding: 8,
+    borderWidth: 1,
   },
   mode: 'light',
 };

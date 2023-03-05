@@ -46,7 +46,7 @@ const Recent = props => {
         'https://api.alternative.me/v1/ticker/?limit=' + LIMIT_ITEM_CNT;
       const resp = await axios.get(url);
       const rlist = resp.data;
-      console.log(rlist.length);
+      console.log("coin length: ", rlist.length);
       if (rlist.length !== LIMIT_ITEM_CNT) return;
 
       if (dataList.length <= 0) {
@@ -142,7 +142,11 @@ const Recent = props => {
   };
 
   useEffect(() => {
-    DB.priceMarkTable.load(markSymbolList);
+    DB.priceMarkTable.load(items => {
+        items.forEach(item => {
+           markSymbolList.push(item)
+        })
+    });
   }, []);
 
   useEffect(() => {
