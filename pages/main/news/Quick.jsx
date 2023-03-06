@@ -171,7 +171,7 @@ const Quick = props => {
                   fontSize: appTheme.fontSize - 3,
                   color: appTheme.fontColor,
                 }}>
-                {util.toDateString(item.addTime * 1000, true)}
+                {util.toDateString(item.addTime * 1000, 2)}
               </Text>
               <TouchableOpacity
                 onPress={() => {

@@ -34,18 +34,14 @@ const Recent = props => {
         const importance = Number(item.importance);
         if (importance < 2) return;
 
-        const unit = item.unit ? item.unit : '';
         const value = (() => {
           if (!item.actual && !item.previous && !item.forecast) return '';
-          return (
-            `${item.actual}/${item.forecast}/${item.previous}` +
-            (!unit ? '' : `(${unit})`)
-          );
+          return `${item.actual}/${item.forecast}/${item.previous}`;
         })();
 
         dataList.push({
           id: item.id,
-          time: util.toDateString(Number(item.public_date) * 1000, false),
+          time: util.toDateString(Number(item.public_date) * 1000, 1),
           country: item.country,
           title: item.title,
           value: value,
@@ -94,21 +90,12 @@ const Recent = props => {
         }}>
         <Text
           style={{
-            width: '20%',
+            width: '65%',
             color: Theme.constant.upColor,
             textAlign: 'center',
             fontSize: appTheme.fontSize,
           }}>
-          时间
-        </Text>
-        <Text
-          style={{
-            width: '45%',
-            color: Theme.constant.upColor,
-            textAlign: 'center',
-            fontSize: appTheme.fontSize,
-          }}>
-          事件
+          时间/国家/事件
         </Text>
         <Text
           style={{
@@ -149,19 +136,10 @@ const Recent = props => {
               style={{
                 color: item.color,
                 fontSize: appTheme.fontSize,
-                width: '20%',
+                width: '65%',
                 textAlign: 'center',
               }}>
-              {item.time}
-            </Text>
-            <Text
-              style={{
-                color: item.color,
-                fontSize: appTheme.fontSize,
-                width: '45%',
-                textAlign: 'center',
-              }}>
-              {`${item.country}/${item.title}`}
+              {`${item.time}/${item.country}/${item.title}`}
             </Text>
             <Text
               style={{

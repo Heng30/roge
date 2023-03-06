@@ -38,7 +38,7 @@ function toPassTimeString(num) {
   else return String(Math.floor(num / 86400)) + 'd';
 }
 
-function toDateString(timestamp, isShortMode) {
+function toDateString(timestamp, mode) {
   if (!timestamp) return '';
   let date = new Date(timestamp);
   let month = date.getMonth() + 1;
@@ -49,7 +49,9 @@ function toDateString(timestamp, isShortMode) {
   if (hours < 10) hours = '0' + hours;
   if (minutes < 10) minutes = '0' + minutes;
 
-  return (isShortMode ? '' : month + '-' + day + ' ') + (hours + ':' + minutes);
+  if (mode === 0) return month + '-' + day + ' ' + hours + ':' + minutes;
+  else if (mode === 1) return month + '-' + day;
+  else if (mode === 2) return hours + ':' + minutes;
 }
 
 export default {

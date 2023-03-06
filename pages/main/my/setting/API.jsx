@@ -82,7 +82,7 @@ const API = props => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              DB.settingTable.update('syncsvrAPI', syncsvrAPI);
+              DB.settingTable.update('syncsvrAPI', syncsvrAPI.trim());
               Toast.show('保存成功!', {
                 duration: Toast.durations.SHORT,
                 position: Toast.positions.TOP,
