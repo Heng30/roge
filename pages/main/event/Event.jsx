@@ -34,14 +34,17 @@ const Recent = props => {
         const importance = Number(item.importance);
         if (importance < 2) return;
 
-        const value = (() => {
-          if (!item.actual && !item.previous && !item.forecast) return '';
-          return `${item.actual}/${item.forecast}/${item.previous}`;
-        })();
+        let value =
+          '今值: ' + (item.actual ? item.actual : '-') + util.paddingSpaces(4);
+        value +=
+          '预期: ' +
+          (item.forecast ? item.forecast : '-') +
+          util.paddingSpaces(4);
+        value += '前值: ' + (item.previous ? item.previous : '-');
 
         dataList.push({
           id: item.id,
-          time: util.toDateString(Number(item.public_date) * 1000, 1),
+          time: util.toDateString(Number(item.public_date) * 1000, 0),
           country: item.country,
           title: item.title,
           value: value,
@@ -82,32 +85,6 @@ const Recent = props => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: Theme.constant.padding,
-        }}>
-        <Text
-          style={{
-            width: '65%',
-            color: Theme.constant.upColor,
-            textAlign: 'center',
-            fontSize: appTheme.fontSize,
-          }}>
-          时间/国家/事件
-        </Text>
-        <Text
-          style={{
-            width: '35%',
-            color: Theme.constant.upColor,
-            textAlign: 'center',
-            fontSize: appTheme.fontSize,
-          }}>
-          今值/预期/前值
-        </Text>
-      </View>
-      <Divider color={appTheme.dividerColor} />
       <FlatList
         ref={flatListRef}
         data={dataList}
@@ -128,28 +105,39 @@ const Recent = props => {
         renderItem={({item}) => (
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingVertical: Theme.constant.padding,
+              padding: Theme.constant.padding,
             }}>
             <Text
               style={{
                 color: item.color,
-                fontSize: appTheme.fontSize,
-                width: '65%',
-                textAlign: 'center',
+                fontSize: appTheme.fontSize + 1,
+                fontWeight: 'bold',
               }}>
-              {`${item.time}/${item.country}/${item.title}`}
+              {`${item.country}${item.title}`}
             </Text>
-            <Text
+
+            <View
               style={{
-                color: item.color,
-                fontSize: appTheme.fontSize,
-                width: '35%',
-                textAlign: 'center',
+                flexDirection: 'row',
               }}>
-              {item.value}
-            </Text>
+              <Text
+                style={{
+                  flex: 1,
+                  color: item.color,
+                  fontSize: appTheme.fontSize,
+                }}>
+                {item.value}
+              </Text>
+              <Text
+                style={{
+                  width: '20%',
+                  color: item.color,
+                  fontSize: appTheme.fontSize - 2,
+                  textAlign: 'right',
+                }}>
+                {item.time}
+              </Text>
+            </View>
           </View>
         )}
       />

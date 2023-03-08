@@ -54,9 +54,14 @@ function toDateString(timestamp, mode) {
   else if (mode === 2) return hours + ':' + minutes;
 }
 
+function paddingSpaces(num) {
+  return new Array(Number(num)).join(' ');
+}
+
 export default {
   toFixedPrice,
   toPercentString,
   toPassTimeString,
   toDateString,
+  paddingSpaces,
 };
