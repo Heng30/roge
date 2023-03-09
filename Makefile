@@ -18,7 +18,7 @@ run-release:
 	npx react-native run-android --variant=release --active-arch-only
 
 build: clean
-	cd android && ./gradlew assembleRelease && cd .. && cp ${APP_DIR}/app-release.apk ./${APP_NANE}_android_${VERSION}_${DATE}.apk
+	cd android && ./gradlew assembleRelease --warning-mode all && cd .. && cp ${APP_DIR}/app-release.apk ./${APP_NANE}_android_${VERSION}_${DATE}.apk
 
 app-install:
 	adb install ${APP_DIR}/app-release.apk
