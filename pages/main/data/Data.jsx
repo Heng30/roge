@@ -59,9 +59,9 @@ const Data = props => {
           dataList[CPO_INDEX].data.push(item);
         }, errors),
 
-        Fetch.CPO_LongShort(item => {
-          dataList[CPO_INDEX].data.push(item);
-        }, errors),
+        // Fetch.CPO_LongShort(item => {
+        //   dataList[CPO_INDEX].data.push(item);
+        // }, errors),
 
         Fetch.CPO_Blast(item => {
           dataList[CPO_INDEX].data.push(item);
