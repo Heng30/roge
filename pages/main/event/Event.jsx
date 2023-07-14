@@ -22,7 +22,7 @@ const Recent = props => {
     const timestamp = Math.round(Date.now() / 1000);
     const url = `https://api-one-wscn.awtmt.com/apiv1/finance/macrodatas?start=${
       timestamp - 24 * 3600
-    }&end=${timestamp + 12 * 3600}`;
+    }&end=${timestamp + 6 * 3600}`;
 
     try {
       const resp = await axios.get(url);

@@ -5,14 +5,12 @@ import Theme from './../../src/theme';
 import Recent from './recent/Recent';
 import Data from './data/Data';
 import Event from './event/Event';
-import News from './news/News';
 import My from './my/My';
 import CONSTANT from './../../src/constant';
 
 const RECENT_INDEX = CONSTANT.RECENT_INDEX;
 const DATA_INDEX = CONSTANT.DATA_INDEX;
 const EVENT_INDEX = CONSTANT.EVENT_INDEX;
-const NEWS_INDEX = CONSTANT.NEWS_INDEX;
 const ME_INDEX = CONSTANT.ME_INDEX;
 const DOUBLE_CLICK_INTERVAL = CONSTANT.DOUBLE_CLICK_INTERVAL;
 
@@ -24,9 +22,7 @@ const Main = props => {
   const [isDoubleClickRecentBtn, setIsDoubleClickRecentBtn] = useState(false);
   const [isDoubleClickDataBtn, setIsDoubleClickDataBtn] = useState(false);
   const [isDoubleClickEventBtn, setIsDoubleClickEventBtn] = useState(false);
-  const [isDoubleClickNewsBtn, setIsDoubleClickNewsBtn] = useState(false);
   const [isJump2Recent, setIsJump2Recent] = useState(false);
-  const [isJump2News, setIsJump2News] = useState(false);
 
   return (
     <View style={{height: '100%'}}>
@@ -55,15 +51,6 @@ const Main = props => {
           <Event
             appTheme={appTheme}
             isDoubleClickEventBtn={isDoubleClickEventBtn}
-            currentIndex={index}
-          />
-        </View>
-        <View
-          style={{flex: 1, display: index === NEWS_INDEX ? 'flex' : 'none'}}>
-          <News
-            appTheme={appTheme}
-            isDoubleClickNewsBtn={isDoubleClickNewsBtn}
-            isJump2News={isJump2News}
             currentIndex={index}
           />
         </View>
@@ -194,45 +181,6 @@ const Main = props => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.TOContainer}
-          onPress={() => {
-            const date = new Date();
-            if (btnClickTime[NEWS_INDEX]) {
-              if (date - btnClickTime[NEWS_INDEX] <= DOUBLE_CLICK_INTERVAL) {
-                setIsDoubleClickNewsBtn(a => !a);
-              }
-            }
-            btnClickTime[NEWS_INDEX] = date;
-
-            if (index !== NEWS_INDEX) setIsJump2News(a => !a);
-            setIndex(NEWS_INDEX);
-          }}>
-          <Icon
-            name="newspaper-outline"
-            type="ionicon"
-            color={
-              index === NEWS_INDEX
-                ? isBullMarket
-                  ? Theme.constant.upColor
-                  : Theme.constant.downColor
-                : 'gray'
-            }
-          />
-
-          <Text
-            style={{
-              color:
-                index === NEWS_INDEX
-                  ? isBullMarket
-                    ? Theme.constant.upColor
-                    : Theme.constant.downColor
-                  : 'gray',
-              fontSize: appTheme.fontSize - 3,
-            }}>
-            资讯
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.TOContainer}
           onPress={() => setIndex(ME_INDEX)}>
           <Icon
             name="person-outline"
@@ -266,7 +214,7 @@ const Main = props => {
 
 const styles = StyleSheet.create({
   TOContainer: {
-    width: '20%',
+    width: '25%',
     justifyContent: 'center',
     alignItems: 'center',
   },
